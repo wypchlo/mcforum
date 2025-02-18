@@ -1,5 +1,5 @@
-use api::main;
+use api::server;
 
 fn main() {
-    api::main::main();
+    server::start().unwrap();
 }
