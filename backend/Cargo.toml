@@ -3,5 +3,8 @@ name = "mcforum_backend"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = [".", "service", "api"]
+
 [dependencies]
-api = { path="api" }
+api = { path = "api" }
