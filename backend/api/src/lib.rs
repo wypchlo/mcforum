@@ -1,3 +1,3 @@
-pub mod app_config;
-pub mod handlers;
+pub mod route_config;
 pub mod server;
+pub mod routes;
