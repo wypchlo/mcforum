@@ -1,4 +1,4 @@
-use actix_web::{HttpServer, App};
+use actix_web::{HttpServer, App, web};
 use actix_web::middleware::{NormalizePath, TrailingSlash, Logger};
 use crate::route_config;
 use dotenv::dotenv;
@@ -6,12 +6,13 @@ use service::sea_orm::{DatabaseConnection, Database, ConnectOptions};
 use std::time::Duration;
 use std::io::Result;
 use log::error;
+use crate::utils::app_state::AppState;
 
 #[actix_web::main]
 pub async fn start() -> Result<()> {
     dotenv().ok();
 
-    let db_url: String = std::env::var("DATABASE_URL").unwrap_or_else(|error| {
+    let db_url: String = std::env::var("DATABASE_URL").unwrap_or_else(|_| {
         error!("Couldn't find DATABASE_URL in the .env file");
         std::process::exit(1);
     });
@@ -28,10 +29,11 @@ pub async fn start() -> Result<()> {
     const HOST: &str = "127.0.0.1";
     const PORT: u16 = 3000;
 
-    let server = HttpServer::new(|| {
+    let server = HttpServer::new(move || {
         App::new()
             .wrap(NormalizePath::new(TrailingSlash::Always))
             .wrap(Logger::default())
+            .app_data(web::Data::new(AppState { db_conn: conn.clone() }))
             .configure(route_config::setup)
     }) 
     .bind((HOST, PORT))?; 
