@@ -8,3 +8,4 @@ members = [".", "service", "api"]
 
 [dependencies]
 api = { path = "api" }
+env_logger = "0.9"
