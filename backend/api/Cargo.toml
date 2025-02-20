@@ -7,6 +7,7 @@ edition = "2021"
 actix-web = "4.0"
 dotenv = "0.15.0"
 log = "0.4"
+serde = { version = "1.0", features = ["derive"] }
 service = { path = "../service" }
 entity = { path = "../entity" }
 

@@ -1,7 +1,7 @@
 use actix_web::{get, post, Responder, HttpResponse, web};
 use crate::utils::app_state::AppState;
 use entity::user;
-use service::sea_orm::{ActiveValue};
+use log::error;
 
 #[get("/")]
 pub async fn get_all() -> impl Responder {
@@ -9,16 +9,30 @@ pub async fn get_all() -> impl Responder {
 }
 
 #[post("/")]
-pub async fn create(data: web::Data<AppState>) -> impl Responder {
-    let conn = &data.db_conn;
+pub async fn create(
+    app_state: web::Data<AppState>,
+    data: web::Json<user::Model>
+) -> impl Responder {
+    let conn = &app_state.db_conn;
 
-    service::user::mutation::Mutation::create_post(conn, user::Model {
-        username: "jakub".to_string(),
-        email: "jakub.rymanowski@spoko.pl".to_string(),
+    let user::Model { username, email, profile_picture, .. } = data.0;
+    
+    let result = service::user::mutation::Mutation::create_post(conn, user::Model {
+        username, 
+        email, 
+        profile_picture, 
         ..Default::default()
     })
-    .await
-    .expect("Zjebalo sie cos");
+    .await;
 
-    HttpResponse::Ok()
+    match result {
+        Ok(model) => model,
+        Err(error) => { 
+            let message = format!("Encountered an error while creating a new post: {error}");
+            error!("{message}");
+            return HttpResponse::InternalServerError().json(message)
+        }
+    };
+
+    HttpResponse::Ok().json("Successfully created a new post")
 }
