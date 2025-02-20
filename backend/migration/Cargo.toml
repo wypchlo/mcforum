@@ -17,3 +17,4 @@ features = [
   "runtime-tokio-rustls",
   "sqlx-mysql"
 ]
+chrono = "0.4"

@@ -8,3 +8,5 @@ actix-web = "4.0"
 dotenv = "0.15.0"
 log = "0.4"
 service = { path = "../service" }
+entity = { path = "../entity" }
+
