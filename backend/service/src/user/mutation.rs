@@ -1,10 +1,10 @@
-use ::entity::user;
+use ::entity::{user, user::Entity as User};
 use sea_orm::*;
 
 pub struct Mutation;
 
 impl Mutation {
-    pub async fn create_post(
+    pub async fn create(
         conn: &DbConn,
         data: user::Model
     ) -> Result<user::ActiveModel, DbErr> {
@@ -16,5 +16,18 @@ impl Mutation {
         }
         .save(conn)
         .await
+    }
+
+    pub async fn delete(  
+        conn: &DbConn,
+        id: i32
+    ) -> Result<DeleteResult, DbErr> {
+        let user: user::ActiveModel = User::find_by_id(id)
+            .one(conn)
+            .await?
+            .ok_or(DbErr::Custom("Encountered an error while deleting the user. An user with the given id does not exist".to_owned()))
+            .map(Into::into)?;
+
+        user.delete(conn).await
     }
 }
