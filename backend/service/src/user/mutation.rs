@@ -20,7 +20,7 @@ impl Mutation {
 
     pub async fn delete(  
         conn: &DbConn,
-        id: i32
+        id: u64
     ) -> Result<DeleteResult, DbErr> {
         let user: user::ActiveModel = User::find_by_id(id)
             .one(conn)

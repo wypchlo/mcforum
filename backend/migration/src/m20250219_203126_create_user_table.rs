@@ -1,5 +1,5 @@
 use sea_orm_migration::prelude::*;
-use serde;
+use sea_query::*;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -14,7 +14,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(User::Id)
-                            .integer()
+                            .big_unsigned()
                             .not_null()
                             .auto_increment()
                             .primary_key()

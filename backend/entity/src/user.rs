@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct Model {
     #[sea_orm(primary_key)]
     #[serde(skip_deserializing)] //this makes it so that you don't have to pass in the id as an argument (pretty cool stuff)
-    pub id: i32,
+    pub id: u64,
     #[sea_orm(unique)]
     pub username: String,
     #[sea_orm(unique)]

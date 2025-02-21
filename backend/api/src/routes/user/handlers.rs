@@ -55,7 +55,7 @@ pub async fn create(
 #[delete("/{user_id}/")]
 pub async fn delete(
     app_state: web::Data<AppState>,
-    path: web::Path<i32>
+    path: web::Path<u64>
 ) -> impl Responder {
     let user_id = path.into_inner();
     
